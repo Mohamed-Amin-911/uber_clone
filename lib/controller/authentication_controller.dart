@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uber_clone/view/screens/authentication_screens/otp_verification_screen.dart';
 
 class AuthenticationController extends GetxController {
   String phoneNumber = "";
   RxBool isLoading = false.obs;
+  RxBool isGoogleLoading = false.obs;
   final _auth = FirebaseAuth.instance;
 
   signUPWithPhoneNumber() async {
@@ -60,5 +62,30 @@ class AuthenticationController extends GetxController {
           snackStyle: SnackStyle.FLOATING,
           snackPosition: SnackPosition.BOTTOM);
     }
+  }
+
+  // Future<UserCredential?>
+  signUpWithGoogle() async {
+    isGoogleLoading.value = true;
+    try {
+      final googleUser = await GoogleSignIn().signIn();
+      final googleAuth = await googleUser?.authentication;
+      final creds = GoogleAuthProvider.credential(
+          idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
+
+      await _auth.signInWithCredential(creds);
+      isGoogleLoading.value = false;
+      Get.snackbar("Success", "",
+          animationDuration: const Duration(seconds: 2),
+          snackStyle: SnackStyle.FLOATING,
+          snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      isGoogleLoading.value = false;
+      Get.snackbar("Error", e.toString(),
+          animationDuration: const Duration(seconds: 2),
+          snackStyle: SnackStyle.FLOATING,
+          snackPosition: SnackPosition.BOTTOM);
+    }
+    // return null;
   }
 }

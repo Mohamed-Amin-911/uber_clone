@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.w),
         child: Column(
@@ -66,25 +67,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
             const DividerWidget(),
             SizedBox(height: 15.h),
             //sign in with google
-            Btn1Widget(
-              bgColor: Kcolor.greyColor,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    width: 30.w,
-                    KIconAssets.google.toString(),
-                  ),
-                  Text(
-                    "  Continue with Google",
-                    style: appStyle(
-                        size: 17.sp,
-                        color: Kcolor.blackColor,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
+            Obx(
+              () => Btn1Widget(
+                bgColor: Kcolor.greyColor,
+                title: controller.isGoogleLoading.value
+                    ? const CircularProgressIndicator(color: Kcolor.blackColor)
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            width: 30.w,
+                            KIconAssets.google.toString(),
+                          ),
+                          Text(
+                            "  Continue with Google",
+                            style: appStyle(
+                                size: 17.sp,
+                                color: Kcolor.blackColor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                function: () {
+                  controller.signUpWithGoogle();
+                },
               ),
-              function: () async {},
             ),
           ],
         ),
