@@ -39,7 +39,7 @@ class PhoneNumberInputWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.r)),
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Kcolor.blackColor,
+              color: Kcolor.greyColor,
               width: 2.w,
             ),
             borderRadius: BorderRadius.circular(10.r)),

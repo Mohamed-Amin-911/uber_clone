@@ -4,7 +4,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uber_clone/view/screens/authentication_screens/name_input_screen.dart';
 import 'package:uber_clone/view/screens/authentication_screens/otp_verification_screen.dart';
 
+enum SignUpMethod {
+  phoneNumber,
+  google,
+}
+
 class AuthenticationController extends GetxController {
+  String signupMethod = "";
   String phoneNumber = "";
   RxBool isLoading = false.obs;
   RxBool isGoogleLoading = false.obs;
@@ -80,6 +86,7 @@ class AuthenticationController extends GetxController {
           animationDuration: const Duration(seconds: 2),
           snackStyle: SnackStyle.FLOATING,
           snackPosition: SnackPosition.BOTTOM);
+      signupMethod = SignUpMethod.google.name;
     } catch (e) {
       isGoogleLoading.value = false;
       Get.snackbar("Error", e.toString(),

@@ -40,7 +40,8 @@ class _NameInputScreenState extends State<NameInputScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 40.h),
+                SizedBox(height: 20.h),
+                //image
                 Center(
                   child: SvgPicture.asset(
                     width: 220.w,
@@ -52,9 +53,9 @@ class _NameInputScreenState extends State<NameInputScreen> {
                 Text(
                   "First name",
                   style: appStyle(
-                      size: 18.sp,
+                      size: 17.sp,
                       color: Kcolor.blackColor,
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 10.h),
                 TxtField1(controller: firstNameController),
@@ -63,20 +64,20 @@ class _NameInputScreenState extends State<NameInputScreen> {
                 Text(
                   "Last name",
                   style: appStyle(
-                      size: 18.sp,
+                      size: 17.sp,
                       color: Kcolor.blackColor,
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 10.h),
                 TxtField1(controller: lastNameController),
                 SizedBox(height: 30.h),
                 //email
                 Text(
-                  "email",
+                  "Email",
                   style: appStyle(
-                      size: 18.sp,
+                      size: 17.sp,
                       color: Kcolor.blackColor,
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 10.h),
                 TxtField1(controller: lastNameController),

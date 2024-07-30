@@ -22,7 +22,7 @@ class TxtField1 extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
-          borderSide: BorderSide(color: Kcolor.darkGreyColor, width: 2.sp),
+          borderSide: BorderSide(color: Kcolor.greyColor, width: 2.sp),
         ),
       ),
     );
