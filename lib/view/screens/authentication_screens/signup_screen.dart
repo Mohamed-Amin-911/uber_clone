@@ -23,77 +23,80 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String phoneNumber = "";
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 60.h),
-            const LogoWidget(),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 60.h),
+              const LogoWidget(),
 
-            SizedBox(height: 100.h),
-            Text(
-              "Enter your mobile number",
-              style: appStyle(
-                  size: 17.sp,
-                  color: Kcolor.blackColor,
-                  fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 20.h),
-            PhoneNumberInputWidget(controller: controller),
-            SizedBox(height: 20.h),
-            //submit phone number
-            Obx(
-              () => Btn1Widget(
-                  bgColor: Kcolor.blackColor,
-                  title: controller.isLoading.value
-                      ? const CircularProgressIndicator(
-                          color: Kcolor.whiteColor,
-                        )
-                      : Text(
-                          "Continue",
-                          style: appStyle(
-                              size: 17.sp,
-                              color: Kcolor.whiteColor,
-                              fontWeight: FontWeight.w500),
-                        ),
-                  function: () async {
-                    controller.signUPWithPhoneNumber();
-                  }),
-            ),
-            SizedBox(height: 50.h),
-            const DividerWidget(),
-            SizedBox(height: 15.h),
-            //sign in with google
-            Obx(
-              () => Btn1Widget(
-                bgColor: Kcolor.greyColor,
-                title: controller.isGoogleLoading.value
-                    ? const CircularProgressIndicator(color: Kcolor.blackColor)
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            width: 30.w,
-                            KIconAssets.google.toString(),
-                          ),
-                          Text(
-                            "  Continue with Google",
+              SizedBox(height: 100.h),
+              Text(
+                "Enter your mobile number",
+                style: appStyle(
+                    size: 17.sp,
+                    color: Kcolor.blackColor,
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 20.h),
+              PhoneNumberInputWidget(controller: controller),
+              SizedBox(height: 20.h),
+              //submit phone number
+              Obx(
+                () => Btn1Widget(
+                    bgColor: Kcolor.blackColor,
+                    title: controller.isLoading.value
+                        ? const CircularProgressIndicator(
+                            color: Kcolor.whiteColor,
+                          )
+                        : Text(
+                            "Continue",
                             style: appStyle(
                                 size: 17.sp,
-                                color: Kcolor.blackColor,
+                                color: Kcolor.whiteColor,
                                 fontWeight: FontWeight.w500),
                           ),
-                        ],
-                      ),
-                function: () {
-                  controller.signUpWithGoogle();
-                },
+                    function: () async {
+                      controller.signUPWithPhoneNumber();
+                    }),
               ),
-            ),
-          ],
+              SizedBox(height: 50.h),
+              const DividerWidget(),
+              SizedBox(height: 15.h),
+              //sign in with google
+              Obx(
+                () => Btn1Widget(
+                  bgColor: Kcolor.greyColor,
+                  title: controller.isGoogleLoading.value
+                      ? const CircularProgressIndicator(
+                          color: Kcolor.blackColor)
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              width: 30.w,
+                              KIconAssets.google.toString(),
+                            ),
+                            Text(
+                              "  Continue with Google",
+                              style: appStyle(
+                                  size: 17.sp,
+                                  color: Kcolor.blackColor,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                  function: () {
+                    controller.signUpWithGoogle();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

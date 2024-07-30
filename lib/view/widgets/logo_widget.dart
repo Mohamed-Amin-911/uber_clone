@@ -28,7 +28,7 @@ class LogoWidget extends StatelessWidget {
         Center(
           child: Row(
             children: [
-              SizedBox(width: 37.w),
+              SizedBox(width: 39.w),
               Text(
                 textAlign: TextAlign.center,
                 "CLONE",

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uber_clone/view/screens/authentication_screens/name_input_screen.dart';
 import 'package:uber_clone/view/screens/authentication_screens/otp_verification_screen.dart';
 
 class AuthenticationController extends GetxController {
@@ -51,10 +52,11 @@ class AuthenticationController extends GetxController {
           verificationId: verificationId, smsCode: otp);
       await _auth.signInWithCredential(cred);
       isLoading.value = false;
-      Get.snackbar("success", "",
-          animationDuration: const Duration(seconds: 2),
-          snackStyle: SnackStyle.FLOATING,
-          snackPosition: SnackPosition.BOTTOM);
+      // Get.snackbar("success", "",
+      //     animationDuration: const Duration(seconds: 2),
+      //     snackStyle: SnackStyle.FLOATING,
+      //     snackPosition: SnackPosition.BOTTOM);
+      Get.to(const NameInputScreen());
     } catch (e) {
       isLoading.value = false;
       Get.snackbar("Error", "Invalid code",
@@ -64,7 +66,6 @@ class AuthenticationController extends GetxController {
     }
   }
 
-  // Future<UserCredential?>
   signUpWithGoogle() async {
     isGoogleLoading.value = true;
     try {
@@ -72,7 +73,7 @@ class AuthenticationController extends GetxController {
       final googleAuth = await googleUser?.authentication;
       final creds = GoogleAuthProvider.credential(
           idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
-
+      // print(googleUser!.displayName);
       await _auth.signInWithCredential(creds);
       isGoogleLoading.value = false;
       Get.snackbar("Success", "",
