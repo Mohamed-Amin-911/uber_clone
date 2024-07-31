@@ -69,7 +69,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       ),
                                 function: () async {
                                   connectionController.checkConnectivity();
-                                  controller.signUPWithPhoneNumber();
+                                  connectionController.isOnline.value
+                                      ? controller.signUPWithPhoneNumber()
+                                      : null;
                                 }),
                           ),
                           SizedBox(height: 50.h),
@@ -101,7 +103,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ),
                               function: () {
                                 connectionController.checkConnectivity();
-                                controller.signUpWithGoogle();
+                                connectionController.isOnline.value
+                                    ? controller.signUpWithGoogle()
+                                    : null;
                               },
                             ),
                           ),

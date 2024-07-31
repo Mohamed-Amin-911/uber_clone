@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
+import 'package:uber_clone/view/widgets/getx_snackbar.dart';
 
 class CommonMethodsController extends GetxController {
   RxBool isOnline = false.obs;
@@ -20,10 +21,7 @@ class CommonMethodsController extends GetxController {
     } else {
       isLoading.value = false;
       isOnline.value = false;
-      Get.snackbar("Error", "Check your connection",
-          animationDuration: const Duration(seconds: 2),
-          snackStyle: SnackStyle.FLOATING,
-          snackPosition: SnackPosition.BOTTOM);
+      getxSnackbar(title: "Error", msg: "Check your connection");
     }
   }
 }
