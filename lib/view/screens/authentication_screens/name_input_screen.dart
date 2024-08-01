@@ -82,41 +82,50 @@ class _NameInputScreenState extends State<NameInputScreen> {
                 SizedBox(height: 10.h),
                 TxtField1(controller: lastNameController),
                 SizedBox(height: 30.h),
-                //email
-                // Text(
-                //   "Email",
-                //   style: appStyle(
-                //       size: 17.sp,
-                //       color: Kcolor.blackColor,
-                //       fontWeight: FontWeight.w500),
-                // ),
-                // SizedBox(height: 10.h),
-                // TxtField1(controller: emailController),
+                // email
+                Text(
+                  "Email",
+                  style: appStyle(
+                      size: 17.sp,
+                      color: Kcolor.blackColor,
+                      fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 10.h),
+                TxtField1(controller: emailController),
                 SizedBox(height: 40.h),
 
                 //continue btn
                 Btn1Widget(
-                    bgColor: Kcolor.blackColor,
-                    title: Text(
-                      "Continue",
-                      style: appStyle(
-                          size: 17.sp,
-                          color: Kcolor.whiteColor,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    function: () {
+                  bgColor: Kcolor.blackColor,
+                  title: Text(
+                    "Continue",
+                    style: appStyle(
+                        size: 17.sp,
+                        color: Kcolor.whiteColor,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  function: () {
+                    if (firstNameController.text.isEmpty ||
+                        lastNameController.text.isEmpty ||
+                        emailController.text.isEmpty) {
+                      getxSnackbar(
+                          title: "Error", msg: "Fill the empty fields.");
+                    } else {
                       userController.addUser(Userr(
                         uid: auth.currentUser!.uid,
                         name:
                             "${firstNameController.text} ${lastNameController.text}",
                         phoneNumber: authController.phoneNumber,
                         signUpMethod: SignUpMethod.phoneNumber.name,
+                        email: emailController.text,
                       ));
                       getxSnackbar(
                           title: "Success",
                           msg: "User logged in successfully.");
                       Get.offAll(const HomeScreen());
-                    })
+                    }
+                  },
+                )
               ],
             ),
           ),

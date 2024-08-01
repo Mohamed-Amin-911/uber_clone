@@ -18,7 +18,7 @@ class PhoneNumberInputWidget extends StatelessWidget {
     return InternationalPhoneNumberInput(
       onInputChanged: (PhoneNumber number) {
         controller.phoneNumber = number.phoneNumber!;
-        print(controller.phoneNumber);
+        // print(controller.phoneNumber);
       },
       countrySelectorScrollControlled: true,
       ignoreBlank: true,

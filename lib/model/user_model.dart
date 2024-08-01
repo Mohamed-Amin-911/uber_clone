@@ -11,13 +11,21 @@ class Userr {
       this.email = "",
       this.phoneNumber = "",
       this.signUpMethod = ""});
-
-  Userr.fromMap(Map<String, dynamic> map)
-      : uid = map['uid'],
-        name = map['name'],
-        email = map['email'],
-        phoneNumber = map['phoneNumber'],
-        signUpMethod = map['signUpMethod'];
+  // Convert a Map object into a User object
+  factory Userr.fromJson(Map<String, dynamic> json) {
+    return Userr(
+        uid: json['uid'],
+        name: json['name'],
+        email: json['email'],
+        phoneNumber: json['phoneNumber'],
+        signUpMethod: json['signUpMethod']);
+  }
+  // Userr.fromMap(Map<String, dynamic> map)
+  //     : uid = map['uid'],
+  //       name = map['name'],
+  //       email = map['email'],
+  //       phoneNumber = map['phoneNumber'],
+  //       signUpMethod = map['signUpMethod'];
 
   Map<String, dynamic> toJson() {
     return {

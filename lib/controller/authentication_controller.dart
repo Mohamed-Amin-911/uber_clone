@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,7 +22,11 @@ class AuthenticationController extends GetxController {
   String phoneNumber = "";
   RxBool isLoading = false.obs;
   RxBool isGoogleLoading = false.obs;
+  bool isSignedBefore = false;
   final _auth = FirebaseAuth.instance;
+  var userList = <Userr>[].obs;
+  final DatabaseReference _databaseReference =
+      FirebaseDatabase.instance.ref().child('users');
 
   signUPWithPhoneNumber() async {
     isLoading.value = true;
@@ -29,25 +34,47 @@ class AuthenticationController extends GetxController {
       isLoading.value = false;
       getxSnackbar(title: "Error", msg: "Invalid phone number");
     } else {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await FirebaseAuth.instance.signInWithCredential(credential);
-        },
-        verificationFailed: (error) {
-          isLoading.value = false;
-          getxSnackbar(title: "Error", msg: "Verification failed");
-        },
-        codeSent: (verificationId, forceResendingToken) {
-          isLoading.value = false;
-          Get.to(OtpVerificationScreen(
-            verificationId: verificationId,
-          ));
-        },
-        codeAutoRetrievalTimeout: (verificationId) {
-          // Get.snackbar("", "Code auto retrieval timeout");
-        },
-      );
+      DatabaseEvent event = await _databaseReference.once();
+      DataSnapshot snapshot = event.snapshot;
+
+      Map<String, dynamic> usersMap =
+          Map<String, dynamic>.from(snapshot.value as Map);
+      List<Userr> users = usersMap.entries
+          .map(
+              (entry) => Userr.fromJson(Map<String, dynamic>.from(entry.value)))
+          .toList();
+      userList.value = users;
+      for (var i in users) {
+        if (i.phoneNumber == phoneNumber) {
+          isSignedBefore = true;
+          break;
+        }
+      }
+
+      if (isSignedBefore) {
+        Get.offAll(const HomeScreen());
+        getxSnackbar(title: "Success", msg: "User logged in successfully.");
+      } else {
+        await _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            await FirebaseAuth.instance.signInWithCredential(credential);
+          },
+          verificationFailed: (error) {
+            isLoading.value = false;
+            getxSnackbar(title: "Error", msg: "Verification failed");
+          },
+          codeSent: (verificationId, forceResendingToken) {
+            isLoading.value = false;
+            Get.to(OtpVerificationScreen(
+              verificationId: verificationId,
+            ));
+          },
+          codeAutoRetrievalTimeout: (verificationId) {
+            // Get.snackbar("", "Code auto retrieval timeout");
+          },
+        );
+      }
     }
   }
 

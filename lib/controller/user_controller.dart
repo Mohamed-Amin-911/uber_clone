@@ -6,24 +6,38 @@ import 'package:uber_clone/model/user_model.dart';
 
 class UserController extends GetxController {
   final _auth = FirebaseAuth.instance;
-
-  final DatabaseReference _database =
+  final DatabaseReference _databaseReference =
       FirebaseDatabase.instance.ref().child('users');
-
+  var userList = <Userr>[].obs;
   Rx<Userr?> user = Rx<Userr?>(null);
 
   Future<void> addUser(Userr user) async {
-    await _database.child(_auth.currentUser!.uid).set(user.toJson());
+    await _databaseReference.child(_auth.currentUser!.uid).set(user.toJson());
   }
 
-  Future<void> fetchUser() async {
-    final uid = _auth.currentUser?.uid;
-    if (uid != null) {
-      final snapshot = await _database.child(uid).get();
-      if (snapshot.exists) {
-        final userData = snapshot.value as Map<String, dynamic>;
-        user.value = Userr.fromMap(userData);
-      }
+  // Fetch user data from the database
+  void fetchUser() async {
+    User? firebaseUser = _auth.currentUser;
+
+    DatabaseEvent event =
+        await _databaseReference.child(firebaseUser!.uid).once();
+    DataSnapshot snapshot = event.snapshot;
+    if (snapshot.exists) {
+      user.value =
+          Userr.fromJson(Map<String, dynamic>.from(snapshot.value as Map));
     }
+  }
+
+// Fetch all users from the database
+  Future<void> fetchAllUsers() async {
+    DatabaseEvent event = await _databaseReference.once();
+    DataSnapshot snapshot = event.snapshot;
+
+    Map<String, dynamic> usersMap =
+        Map<String, dynamic>.from(snapshot.value as Map);
+    List<Userr> users = usersMap.entries
+        .map((entry) => Userr.fromJson(Map<String, dynamic>.from(entry.value)))
+        .toList();
+    userList.value = users;
   }
 }

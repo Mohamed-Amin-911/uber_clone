@@ -30,7 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Obx(
             () => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,6 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 100.h),
                 connectionController.isOnline.value
                     ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           //sign in with phone number
                           Text(
