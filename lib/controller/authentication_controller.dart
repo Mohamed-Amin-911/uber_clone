@@ -9,7 +9,7 @@ import 'package:uber_clone/model/user_model.dart';
 import 'package:uber_clone/view/screens/authentication_screens/name_input_screen.dart';
 import 'package:uber_clone/view/screens/authentication_screens/otp_verification_screen.dart';
 import 'package:uber_clone/view/screens/home_screen.dart';
-import 'package:uber_clone/view/widgets/getx_snackbar.dart';
+import 'package:uber_clone/view/widgets/common_widgets/getx_snackbar.dart';
 
 enum SignUpMethod {
   phoneNumber,
@@ -25,10 +25,12 @@ class AuthenticationController extends GetxController {
   bool isSignedBefore = false;
   final _auth = FirebaseAuth.instance;
   var userList = <Userr>[].obs;
+  String isBlocked = "no";
   final DatabaseReference _databaseReference =
       FirebaseDatabase.instance.ref().child('users');
 
   signUPWithPhoneNumber() async {
+    List<Userr> users = [];
     isLoading.value = true;
     if (phoneNumber.length < 11) {
       isLoading.value = false;
@@ -36,24 +38,38 @@ class AuthenticationController extends GetxController {
     } else {
       DatabaseEvent event = await _databaseReference.once();
       DataSnapshot snapshot = event.snapshot;
+      if (snapshot.value != null) {
+        Map<String, dynamic> usersMap =
+            Map<String, dynamic>.from(snapshot.value as Map);
+        users = usersMap.entries
+            .map((entry) =>
+                Userr.fromJson(Map<String, dynamic>.from(entry.value)))
+            .toList();
+      }
 
-      Map<String, dynamic> usersMap =
-          Map<String, dynamic>.from(snapshot.value as Map);
-      List<Userr> users = usersMap.entries
-          .map(
-              (entry) => Userr.fromJson(Map<String, dynamic>.from(entry.value)))
-          .toList();
       userList.value = users;
-      for (var i in users) {
-        if (i.phoneNumber == phoneNumber) {
-          isSignedBefore = true;
-          break;
+      if (users.isNotEmpty) {
+        for (var i in users) {
+          if (i.phoneNumber == phoneNumber) {
+            isSignedBefore = true;
+            isBlocked = i.isBlocked;
+
+            break;
+          }
         }
+      } else {
+        isSignedBefore = false;
       }
 
       if (isSignedBefore) {
-        Get.offAll(const HomeScreen());
-        getxSnackbar(title: "Success", msg: "User logged in successfully.");
+        isLoading.value = false;
+        if (isBlocked == "no") {
+          Get.offAll(const HomeScreen());
+          getxSnackbar(title: "Success", msg: "User logged in successfully.");
+        } else {
+          getxSnackbar(
+              title: "Error", msg: "User is blocked, please contact support.");
+        }
       } else {
         await _auth.verifyPhoneNumber(
           phoneNumber: phoneNumber,
@@ -93,6 +109,7 @@ class AuthenticationController extends GetxController {
   }
 
   signUpWithGoogle() async {
+    List<Userr> users = [];
     isGoogleLoading.value = true;
     try {
       final googleUser = await GoogleSignIn().signIn();
@@ -103,18 +120,51 @@ class AuthenticationController extends GetxController {
       signupMethod = SignUpMethod.google.name;
 
       //upload user data to firebase
-      userController.addUser(Userr(
-        uid: _auth.currentUser!.uid,
-        name: googleUser!.displayName!,
-        email: googleUser.email,
-        signUpMethod: signupMethod,
-      ));
 
       isGoogleLoading.value = false;
 
-      getxSnackbar(title: "Success", msg: "User logged in successfully.");
+      DatabaseEvent event = await _databaseReference.once();
+      DataSnapshot snapshot = event.snapshot;
+      if (snapshot.value != null) {
+        Map<String, dynamic> usersMap =
+            Map<String, dynamic>.from(snapshot.value as Map);
+        users = usersMap.entries
+            .map((entry) =>
+                Userr.fromJson(Map<String, dynamic>.from(entry.value)))
+            .toList();
+      }
 
-      Get.offAll(const HomeScreen());
+      userList.value = users;
+      if (users.isNotEmpty) {
+        for (var i in users) {
+          if (i.email == googleUser!.email) {
+            isSignedBefore = true;
+            isBlocked = i.isBlocked;
+
+            break;
+          }
+        }
+      } else {
+        isSignedBefore = false;
+      }
+
+      if (isSignedBefore) {
+        if (isBlocked == "no") {
+          getxSnackbar(title: "Success", msg: "User logged in successfully.");
+
+          Get.offAll(const HomeScreen());
+        } else {
+          getxSnackbar(
+              title: "Error", msg: "User is blocked, please contact support.");
+        }
+      } else {
+        userController.addUser(Userr(
+          uid: _auth.currentUser!.uid,
+          name: googleUser!.displayName!,
+          email: googleUser.email,
+          signUpMethod: signupMethod,
+        ));
+      }
     } catch (e) {
       isGoogleLoading.value = false;
       getxSnackbar(title: "Error", msg: e.toString());

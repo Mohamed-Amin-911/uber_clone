@@ -11,6 +11,7 @@ class UserController extends GetxController {
   var userList = <Userr>[].obs;
   Rx<Userr?> user = Rx<Userr?>(null);
 
+//add user
   Future<void> addUser(Userr user) async {
     await _databaseReference.child(_auth.currentUser!.uid).set(user.toJson());
   }

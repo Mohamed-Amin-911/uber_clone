@@ -9,9 +9,9 @@ import 'package:uber_clone/controller/authentication_controller.dart';
 import 'package:uber_clone/controller/user_controller.dart';
 import 'package:uber_clone/model/user_model.dart';
 import 'package:uber_clone/view/screens/home_screen.dart';
-import 'package:uber_clone/view/widgets/btn_1_widget.dart';
-import 'package:uber_clone/view/widgets/getx_snackbar.dart';
-import 'package:uber_clone/view/widgets/txtfield_1_widget.dart';
+import 'package:uber_clone/view/widgets/common_widgets/btn_1_widget.dart';
+import 'package:uber_clone/view/widgets/common_widgets/getx_snackbar.dart';
+import 'package:uber_clone/view/widgets/common_widgets/txtfield_1_widget.dart';
 import 'package:get/get.dart';
 
 class NameInputScreen extends StatefulWidget {

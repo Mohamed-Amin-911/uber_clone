@@ -9,9 +9,9 @@ import 'package:uber_clone/controller/authentication_controller.dart';
 import 'package:uber_clone/controller/common_methods_controller.dart';
 import 'package:uber_clone/view/widgets/authentication_widgets/divider_widget.dart';
 import 'package:uber_clone/view/widgets/authentication_widgets/phone_number_input_widget.dart';
-import 'package:uber_clone/view/widgets/btn_1_widget.dart';
-import 'package:uber_clone/view/widgets/logo_widget.dart';
-import 'package:uber_clone/view/widgets/oflline_widget.dart';
+import 'package:uber_clone/view/widgets/common_widgets/btn_1_widget.dart';
+import 'package:uber_clone/view/widgets/common_widgets/logo_widget.dart';
+import 'package:uber_clone/view/widgets/common_widgets/oflline_widget.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

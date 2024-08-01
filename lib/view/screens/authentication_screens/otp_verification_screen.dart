@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:uber_clone/constants/colors.dart';
 import 'package:uber_clone/constants/text_style.dart';
 import 'package:uber_clone/controller/authentication_controller.dart';
-import 'package:uber_clone/view/widgets/btn_1_widget.dart';
+import 'package:uber_clone/view/widgets/common_widgets/btn_1_widget.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   const OtpVerificationScreen({super.key, required this.verificationId});

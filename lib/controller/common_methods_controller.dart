@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
-import 'package:uber_clone/view/widgets/getx_snackbar.dart';
+import 'package:uber_clone/view/widgets/common_widgets/getx_snackbar.dart';
 
 class CommonMethodsController extends GetxController {
   RxBool isOnline = false.obs;
