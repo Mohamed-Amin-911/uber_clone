@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,6 +9,7 @@ import 'package:uber_clone/controller/user_controller.dart';
 import 'package:uber_clone/model/user_model.dart';
 import 'package:uber_clone/view/screens/authentication_screens/name_input_screen.dart';
 import 'package:uber_clone/view/screens/authentication_screens/otp_verification_screen.dart';
+import 'package:uber_clone/view/screens/authentication_screens/signup_screen.dart';
 import 'package:uber_clone/view/screens/home_screen.dart';
 import 'package:uber_clone/view/widgets/common_widgets/getx_snackbar.dart';
 
@@ -18,6 +20,7 @@ enum SignUpMethod {
 
 class AuthenticationController extends GetxController {
   final userController = Get.put(UserController());
+  RxString isSigned = "".obs;
   String signupMethod = "";
   String phoneNumber = "";
   RxBool isLoading = false.obs;
@@ -28,6 +31,12 @@ class AuthenticationController extends GetxController {
   String isBlocked = "no";
   final DatabaseReference _databaseReference =
       FirebaseDatabase.instance.ref().child('users');
+
+  @override
+  void onInit() async {
+    super.onInit();
+    await isLoggedRead();
+  }
 
   signUPWithPhoneNumber() async {
     List<Userr> users = [];
@@ -65,6 +74,7 @@ class AuthenticationController extends GetxController {
         isLoading.value = false;
         if (isBlocked == "no") {
           Get.offAll(const HomeScreen());
+          isLogged("yes");
           getxSnackbar(title: "Success", msg: "User logged in successfully.");
         } else {
           getxSnackbar(
@@ -121,8 +131,6 @@ class AuthenticationController extends GetxController {
 
       //upload user data to firebase
 
-      isGoogleLoading.value = false;
-
       DatabaseEvent event = await _databaseReference.once();
       DataSnapshot snapshot = event.snapshot;
       if (snapshot.value != null) {
@@ -150,9 +158,11 @@ class AuthenticationController extends GetxController {
 
       if (isSignedBefore) {
         if (isBlocked == "no") {
+          isGoogleLoading.value = false;
           getxSnackbar(title: "Success", msg: "User logged in successfully.");
 
           Get.offAll(const HomeScreen());
+          isLogged("yes");
         } else {
           getxSnackbar(
               title: "Error", msg: "User is blocked, please contact support.");
@@ -164,10 +174,39 @@ class AuthenticationController extends GetxController {
           email: googleUser.email,
           signUpMethod: signupMethod,
         ));
+        isGoogleLoading.value = false;
+        Get.offAll(const HomeScreen());
+        isLogged("yes");
+        getxSnackbar(title: "Success", msg: "User logged in successfully.");
       }
     } catch (e) {
       isGoogleLoading.value = false;
       getxSnackbar(title: "Error", msg: e.toString());
+    }
+  }
+
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  Future<void> isLogged(String isLoggedIn) async {
+    await _storage.write(key: 'isLoggedIn', value: isLoggedIn);
+  }
+
+  isLoggedRead() async {
+    String? res = await _storage.read(key: 'isLoggedIn');
+    isSigned.value = res == "yes" ? "yes" : "no";
+  }
+
+  Future<void> signOut() async {
+    try {
+      signupMethod == SignUpMethod.google.name
+          ? await GoogleSignIn().signOut()
+          : _auth.signOut();
+
+      Get.offAll(const SignUpScreen());
+      getxSnackbar(title: "", msg: "User Logged out");
+      isLogged("no");
+    } catch (e) {
+      print("Something went wrong");
     }
   }
 }

@@ -123,6 +123,7 @@ class _NameInputScreenState extends State<NameInputScreen> {
                           title: "Success",
                           msg: "User logged in successfully.");
                       Get.offAll(const HomeScreen());
+                      authController.isLogged("yes");
                     }
                   },
                 )
